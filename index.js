@@ -67,7 +67,7 @@ bot.on('message', async (msg) => {
       }
       catch (error) {
         console.error(error);
-        bot.sendMessage(msg.chat.id, "Извините, я не что-то не смог.", {reply_to_message_id: msg.message_id});
+        bot.sendMessage(msg.chat.id, "Извините, я что-то не смог.", {reply_to_message_id: msg.message_id});
         
         // Останавливаем оповещение о том, что бот печатает
         clearInterval(typingInterval);

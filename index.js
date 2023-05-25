@@ -36,7 +36,7 @@ bot.on('message', async (msg) => {
     // Вырезаем из сообщения упоминание бота
     let userQuery = msg.text.slice(config.bot_name.length).trim();
 
-    console.log(`userQuery=${userQuery}`);
+    console.log(`query=${userQuery}, lang=${languageContext}, user=${msg.from.username}`);
     
     try {
         // Отправляем сообщение о том, что бот печатает
@@ -61,8 +61,6 @@ bot.on('message', async (msg) => {
         // Останавливаем оповещение о том, что бот печатает
         clearInterval(typingInterval);
   
-        console.log(response);
-
         // Отправляем ответ пользователю
         let gptResponse = response.data.choices[0].message.content.trim();
         bot.sendMessage(msg.chat.id, gptResponse, {reply_to_message_id: msg.message_id, parse_mode: 'markdown'});

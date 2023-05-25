@@ -1,0 +1,20 @@
+{
+  "name": "ppr-dev-bot",
+  "version": "1.0.0",
+  "description": "Telegram Bot that helps solving coding questions for PPR employees",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "telegram",
+    "openai",
+    "bot"
+  ],
+  "author": "Denis Gryzlov",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.61.0",
+    "openai": "^3.2.1"
+  }
+}

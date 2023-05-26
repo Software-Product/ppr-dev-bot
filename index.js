@@ -38,15 +38,15 @@ bot.on('message', async (msg) => {
 
     console.log(`query=${userQuery}, lang=${languageContext}, user=${msg.from.username}`);
     
-    try {
-        // Отправляем сообщение о том, что бот печатает
+    // Отправляем сообщение о том, что бот печатает
+    bot.sendChatAction(msg.chat.id, 'typing');
+
+    // Шлем это оповещение каждые 3 секунды, пока OpenAI не ответит
+    let typingInterval = setInterval(() => {
         bot.sendChatAction(msg.chat.id, 'typing');
+    }, 3000);
 
-        // Шлем это оповещение каждые 3 секунды, пока OpenAI не ответит
-        let typingInterval = setInterval(() => {
-            bot.sendChatAction(msg.chat.id, 'typing');
-        }, 3000);
-
+    try {
         // Запрашиваем ответ у OpenAI
         const prompt = `Помогай программировать на ${languageContext}. Отвечай как другу на "ты", кратко, с юмором, с минимумом кода`;
 

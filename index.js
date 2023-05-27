@@ -89,10 +89,10 @@ bot.on('message', async (msg) => {
         // Если OpenAI не ответит в течение 30 секунд, то отваливаемся
         const timeout = new Promise((resolve, reject) => {
           const id = setTimeout(() => {
-              clearTimeout(id);
-              reject(new Error("Что-то затянулось. Давайте попозже."));
-          }, config.timeout * 1000);
-        });
+              clearTimeout(id)
+              reject(new Error("Что-то затянулось. Давайте попозже."))
+          }, config.timeout * 1000)
+        })
 
         // Ждем ответа от OpenAI или таймаута
         Promise.race([apiCall, timeout])
@@ -141,6 +141,14 @@ bot.on('new_chat_members', (msg) => {
     logMessage(msg)
   }
 })
+
+bot.on('message', (msg) => {
+  if (msg.text.startsWith('/start') && msg.chat.type === 'private') {
+    const response = config.welcome_message
+    bot.sendMessage(msg.chat.id, response)
+  }
+})
+
 
 function logMessage(error) {
   if ( debug ) {

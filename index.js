@@ -22,7 +22,7 @@ const chatIdLanguageMap = config.chatIdLanguageMap
 bot.on('message', async (msg) => {
     // Определяем как имменно бота упомянули в сообщении
     let isPing = msg.text.startsWith("@" + config.bot_name)
-    let isReply = msg.reply_to_message && msg.reply_to_message.from.username === config.bot_name
+    let isReply = msg.reply_to_message != undefined && msg.reply_to_message.from.username === config.bot_name
     let isMention = msg.text.toLowerCase().startsWith("бот,")
 
     // Если сообщение общее, без упоминания бота, игнорим сообщение

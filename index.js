@@ -105,7 +105,8 @@ bot.on('message', async (msg) => {
             // Отправляем ответ пользователю
             bot.sendMessage(msg.chat.id, gptResponse, {
                               reply_to_message_id: msg.message_id,
-                              parse_mode: 'Markdown'
+                              parse_mode: 'Markdown',
+                              disable_web_page_preview: true
                            })
 
             clearInterval(typingTimer)

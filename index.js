@@ -20,6 +20,9 @@ const bot = new TelegramBot(config.telegram_bot_token, {polling: true})
 const chatIdLanguageMap = config.chatIdLanguageMap
 
 bot.on('message', async (msg) => {
+    // Если сообщение не текстовое, игнорим сообщение
+    if ( !msg.text ) { return }
+
     // Определяем как имменно бота упомянули в сообщении
     let isPing = msg.text.startsWith("@" + config.bot_name)
     let isReply = msg.reply_to_message != undefined && msg.reply_to_message.from.username === config.bot_name
@@ -27,13 +30,13 @@ bot.on('message', async (msg) => {
 
     // Если сообщение общее, без упоминания бота, игнорим сообщение
     if ( isPing === false && isReply === false && isMention === false ) {
-        return
+      return
     }
 
     // Если бота упомянули в чате, где он не знает язык, игнорим сообщение
     let languageContext = chatIdLanguageMap[String(msg.chat.id)]
     if (languageContext === undefined) {
-        return
+      return
     }
     
     // Забираем запрос пользователя
@@ -137,14 +140,14 @@ function sendError(chatId, error, typingTimer) {
 
 // Отправляем сообщение админу, когда бот добавили в новый чат
 bot.on('new_chat_members', (msg) => {
-  if(msg.new_chat_member.username === config.bot_name.slice(1)) {
+  if ( msg.new_chat_member.username === config.bot_name ) {
     bot.sendMessage(config.admin_id, `Меня добавили в новую группу.\n chat.id=${msg.chat.id}\nchat.title=${msg.chat.title}\nuser=${msg.from.username}`)
     logMessage(msg)
   }
 })
 
 bot.on('message', (msg) => {
-  if (msg.text.startsWith('/start') && msg.chat.type === 'private') {
+  if (msg.text && msg.text.startsWith('/start') && msg.chat.type === 'private') {
     const response = config.welcome_message
     bot.sendMessage(msg.chat.id, response)
   }

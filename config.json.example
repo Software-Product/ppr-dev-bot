@@ -1,8 +1,10 @@
 {
     "openai_key": "ключ openai",
     "telegram_bot_token": "токен для бота",
-    "bot_name": "@YourBotName",
+    "bot_name": "YourBotName",
     "admin_id": 123456,
+    "timeout": 30,
+    "debug": false,
     "chatIdLanguageMap": {
       "-978504211": "Swift", 
       "-2390932943": "Java"

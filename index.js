@@ -33,12 +33,18 @@ bot.on('message', async (msg) => {
       return
     }
 
-    // Если бота упомянули в чате, где он не знает язык, игнорим сообщение
     let languageContext = chatIdLanguageMap[String(msg.chat.id)]
+    let topicID = msg.message_thread_id
+
+    if (topicID != undefined && typeof languageContext === 'object') { 
+      languageContext = languageContext[String(topicID)]
+    }
+
+    // Если бота упомянули в чате, где он не знает язык, игнорим сообщение
     if (languageContext === undefined) {
       return
     }
-    
+
     // Забираем запрос пользователя
     let userQuery = msg.text.trim()
 
@@ -52,17 +58,23 @@ bot.on('message', async (msg) => {
     // Логируем запрос
     logMessage(`query=${userQuery}, lang=${languageContext}, user=${msg.from.username}`)
     
+    // Для события typing готовим опции под топик, если он есть
+    let options = {}
+    if ( topicID != undefined ) {
+      options.message_thread_id = topicID
+    }
+
     // Отправляем сообщение о том, что бот печатает
-    bot.sendChatAction(msg.chat.id, 'typing')
+    bot.sendChatAction(msg.chat.id, 'typing', options)
 
     // Шлем это оповещение каждые 3 секунды, пока OpenAI не ответит
     let typingTimer = setInterval(() => {
-        bot.sendChatAction(msg.chat.id, 'typing')
+        bot.sendChatAction(msg.chat.id, 'typing', options)
     }, 3000)
 
     try {
         // Настраиваем персоналию для OpenAI
-        const prompt = `Помогай программировать на ${languageContext}. Отвечай как другу на "ты", кратко, с юмором, с минимумом кода`
+        const prompt = `Помогай программировать на ${languageContext}. Отвечай как коллеге на "ты", кратко, с юмором, с минимумом кода`
 
         // Собираем сообщения для OpenAI
         let messagesList = [
@@ -105,12 +117,20 @@ bot.on('message', async (msg) => {
             // Вырезаем ответ от OpenAI
             let gptResponse = response.data.choices[0].message.content.trim()
 
+            // Настройки для ответа пользователю
+            let options = {
+              reply_to_message_id: msg.message_id,
+              parse_mode: 'Markdown',
+              disable_web_page_preview: true
+            }
+
+            // Если сообщение предназначено для топика, прибавляем его к опциям
+            if ( topicID != undefined ) {
+              options.top_msg_id = topicID
+            }
+
             // Отправляем ответ пользователю
-            bot.sendMessage(msg.chat.id, gptResponse, {
-                              reply_to_message_id: msg.message_id,
-                              parse_mode: 'Markdown',
-                              disable_web_page_preview: true
-                           })
+            bot.sendMessage(msg.chat.id, gptResponse, options)
 
             clearInterval(typingTimer)
           }).catch((error) => {
@@ -152,7 +172,6 @@ bot.on('message', (msg) => {
     bot.sendMessage(msg.chat.id, response)
   }
 })
-
 
 function logMessage(error) {
   if ( debug ) {

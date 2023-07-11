@@ -41,7 +41,7 @@ bot.on('message', async (msg) => {
     }
 
     // Если бота упомянули в чате, где он не знает язык, игнорим сообщение
-    if (languageContext === undefined) {
+    if (languageContext === undefined || typeof languageContext !== 'string') {
       return
     }
 

@@ -74,7 +74,7 @@ bot.on('message', async (msg) => {
 
     try {
         // Настраиваем персоналию для OpenAI
-        const prompt = `Помогай программировать на ${languageContext}. Отвечай как коллеге на "ты", кратко, с юмором, с минимумом кода`
+        const prompt = `Помогай программировать на ${languageContext}. Отвечай как коллеге на "ты", кратко, с юмором, с минимумом кода.`
 
         // Собираем сообщения для OpenAI
         let messagesList = [
@@ -85,7 +85,7 @@ bot.on('message', async (msg) => {
         // Если пользователь отвечает на предыдущее сообщение, то добавляем его в список сообщений для OpenAI
         if (msg.reply_to_message && msg.reply_to_message.from.username === config.bot_name) {
           let botLastMessage = msg.reply_to_message.text
-          let userReply = msg.text + ". Код заверни в ```"
+          let userReply = msg.text + ". Код в markdown"
 
           // Заменяем в списке сообщений последний вход, на оригинальный ответ бота
           messagesList.pop()
@@ -115,7 +115,10 @@ bot.on('message', async (msg) => {
             logMessage(response.data)
 
             // Вырезаем ответ от OpenAI
-            let gptResponse = response.data.choices[0].message.content.trim()
+            var gptResponse = response.data.choices[0].message.content.trim()
+
+            // Экранируем спецсимволы чтобы не ломать markdown парзер
+            gptResponse = escapeMarkdown(gptResponse)
 
             // Настройки для ответа пользователю
             let options = {
@@ -177,4 +180,15 @@ function logMessage(error) {
   if ( debug ) {
     console.log(error)
   }
+}
+
+function escapeMarkdown(str) {
+  return str.split(/(```[\s\S]*?```)/g).map((block, index) => {
+      // Если блок не является блоком кода, экранируем спец.символы
+      if (index % 2 === 0) {
+          return block.replace(/([*_`])/g, '\\$1');
+      }
+      // Иначе оставляем блок кода без изменений
+      return block;
+  }).join('');
 }

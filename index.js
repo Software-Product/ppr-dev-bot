@@ -74,7 +74,7 @@ bot.on('message', async (msg) => {
 
     try {
         // Настраиваем персоналию для OpenAI
-        const prompt = `Помогай программировать на ${languageContext}. Отвечай как коллеге на "ты", кратко, с юмором, с минимумом кода.`
+        const prompt = `Отвечай на вопросы по ${languageContext}. Пиши как старшему коллеге на «ты», кратко, можно с юмором, код оберни в markdown.`
 
         // Собираем сообщения для OpenAI
         let messagesList = [
@@ -85,7 +85,7 @@ bot.on('message', async (msg) => {
         // Если пользователь отвечает на предыдущее сообщение, то добавляем его в список сообщений для OpenAI
         if (msg.reply_to_message && msg.reply_to_message.from.username === config.bot_name) {
           let botLastMessage = msg.reply_to_message.text
-          let userReply = msg.text + ". Код в markdown"
+          let userReply = msg.text + ".\n\nP.S. Код в markdown"
 
           // Заменяем в списке сообщений последний вход, на оригинальный ответ бота
           messagesList.pop()

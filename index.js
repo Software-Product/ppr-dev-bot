@@ -74,7 +74,7 @@ bot.on('message', async (msg) => {
 
     try {
         // Настраиваем персоналию для OpenAI
-        const prompt = `Отвечай на вопросы по ${languageContext}. Пиши как старшему коллеге на «ты», кратко, можно с юмором, код оберни в markdown.`
+        const prompt = `Отвечай на вопросы по ${languageContext}. Пиши как старшему коллеге на «ты», кратко, с юмором, код оберни в markdown.`
 
         // Собираем сообщения для OpenAI
         let messagesList = [

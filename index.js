@@ -99,6 +99,8 @@ bot.on('message', async (msg) => {
         const apiCall = openai.createChatCompletion({
           model: "gpt-3.5-turbo",
           messages: messagesList,
+          temperature: 1.0,
+
         })
         
         // Если OpenAI не ответит в течение 30 секунд, то отваливаемся

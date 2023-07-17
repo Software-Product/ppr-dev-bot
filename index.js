@@ -183,12 +183,14 @@ function logMessage(error) {
 }
 
 function escapeMarkdown(str) {
-  return str.split(/(```[\s\S]*?```)/g).map((block, index) => {
-      // Если блок не является блоком кода, экранируем спец.символы
-      if (index % 2 === 0) {
-          return block.replace(/([*_`])/g, '\\$1');
-      }
-      // Иначе оставляем блок кода без изменений
-      return block;
+  return str.split(/(```[\s\S]*?```|`[^`]*`)/g).map((block, index) => {
+    // Если блок не является блоком кода, экранируем спец.символы
+    if (index % 2 === 0) {
+        return block.replace(/(\B[_*`]\B)/g, '\\$1');
+    }
+    // Иначе оставляем блок кода без изменений
+    return block;
   }).join('');
 }
+
+

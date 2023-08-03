@@ -74,7 +74,7 @@ bot.on('message', async (msg) => {
 
     try {
         // Настраиваем персоналию для OpenAI
-        const prompt = `Отвечай на вопросы по ${languageContext}. Пиши как старшему коллеге на «ты», кратко на 2-3 абзаца, без вступления и послесловия, можно с юмором, куски кода оберни в markdown.`
+        let prompt = `Отвечай на вопросы по ${languageContext}. Пиши как старшему коллеге на «ты», кратко на 2-3 абзаца, без вступления и послесловия, можно с юмором, куски кода оберни в markdown.`
 
         // Собираем сообщения для OpenAI
         let messagesList = [
@@ -86,6 +86,11 @@ bot.on('message', async (msg) => {
         if (msg.reply_to_message && msg.reply_to_message.from.username === config.bot_name) {
           let botLastMessage = msg.reply_to_message.text
           let userReply = msg.text + ".\n\nP.S. Код в markdown"
+
+          // Если нас поблагодарили
+          if (msg.text.toLowerCase().includes("спасибо") && msg.text.length < 20) {
+            prompt = "Если тебе написали спасибо — ответь как старшему коллеге на «ты», с юмором, просто одно предложение с «пожалуйста»"
+          } 
 
           // Заменяем в списке сообщений последний вход, на оригинальный ответ бота
           messagesList.pop()

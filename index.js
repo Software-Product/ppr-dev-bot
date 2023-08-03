@@ -88,7 +88,7 @@ bot.on('message', async (msg) => {
           let userReply = msg.text
 
           // Если нас поблагодарили, то отвечаем на благодарность и не пишем более ничего лишнего
-          if (msg.text.toLowerCase().includes("спасибо") && msg.text.length < 20) {
+          if (msg.text.toLowerCase().includes("спасибо") && msg.text.length < 40) {
             messagesList[0].content = "Если тебя поблагодарили спасибо — ответь на «ты», с юмором, просто одно предложение с «пожалуйста»"
           } 
           else {
